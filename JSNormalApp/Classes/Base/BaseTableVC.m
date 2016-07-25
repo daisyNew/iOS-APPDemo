@@ -29,7 +29,6 @@
     
     if (_isAddPullDownControl == YES) {
         self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-            
             [self pullDownToRefresh];
         }];
      }

@@ -16,28 +16,32 @@
 
 #define BaseURL                      @"http://www0.juesheng.com"
 
+#define JPushIsProduction 0
+
+
+
+
+
 #else
 
 #define BaseURL                      @"http://www.juesheng.com"
+
+#define JPushIsProduction 1
+
+
+
+
+
+
 
 #endif
 
 #define JoinString(url)        [NSString stringWithFormat:@"%@/%@",BaseURL,url]
 
+#define SendCode             JoinString(@"sendCode")
 
+#define ShareUrl                JoinString(@"ShareUrl")
 
-
-
-
-
-
-
-
-#define SendCode         JoinString(@"sendCode")
-
-#define ShareUrl         JoinString(@"ShareUrl")
-
-#define LoginAndRegister JoinString(@"LoginAndRegister")
-
+#define LoginAndRegister  JoinString(@"LoginAndRegister")
 
 #endif /* JSUrlDefine_h */

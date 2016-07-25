@@ -13,7 +13,7 @@
  */
 @interface BaseTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) id               model;
+@property (nonatomic, strong) id                         model;
 @property (nonatomic, weak  ) UIViewController *viewController;
 
 

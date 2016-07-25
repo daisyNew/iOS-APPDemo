@@ -16,6 +16,9 @@
 
 #define UMengKey  @""
 
+//极光推送
+#define JPushKey @""
+
 //屏幕宽度
 #define ScreenW   CGRectGetWidth([UIScreen mainScreen].bounds)
 //屏幕高度

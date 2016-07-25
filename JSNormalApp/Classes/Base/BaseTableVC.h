@@ -14,6 +14,8 @@
 
 /**
  *是否添加下拉刷新上拉加载控件, 默认不添加 在子类ViewDidLoad之前设置
+ 
+  使用说明：在VC中开启下拉刷新上拉加载功能，实现对应方法即可。
  */
 @property (nonatomic, assign) BOOL isAddPullDownControl;
 @property (nonatomic, assign) BOOL isAddPullUpControl;

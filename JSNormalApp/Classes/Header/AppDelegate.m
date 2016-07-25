@@ -12,6 +12,8 @@
 #import "UMMobClick/MobClick.h"
 #import "UMSocial.h"
 #import "UMSocialWechatHandler.h"
+#import "JPUSHService.h"
+#import <AdSupport/AdSupport.h>
 
 
 #define UmengShareAppID     @""
@@ -36,6 +38,7 @@
     //友盟分享
     [self umengShare];
     
+    [self jpushWith:launchOptions];
     
     [self.window makeKeyAndVisible];
     
@@ -58,6 +61,33 @@
     [UMSocialWechatHandler setWXAppId:UmengShareAppID appSecret:UmengShareAppSecret url:ShareUrl];
     [UMSocialConfig hiddenNotInstallPlatforms:@[UMShareToWechatFavorite,UMShareToWechatSession]];
     
+}
+
+- (void)jpushWith:(NSDictionary *)launchOptions{
+    
+    //极光推送
+    NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    //Required
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        //可以添加自定义categories
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeSound |
+                                                          UIUserNotificationTypeAlert)
+                                              categories:nil];
+    } else {
+        //categories 必须为nil
+        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                          UIRemoteNotificationTypeSound |
+                                                          UIRemoteNotificationTypeAlert)
+                                              categories:nil];
+    }
+    
+    //Required
+    [JPUSHService setupWithOption:launchOptions
+                           appKey:JPushKey
+                          channel:@"Publish channel"
+                 apsForProduction:JPushIsProduction
+            advertisingIdentifier:advertisingId];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
@@ -87,10 +117,30 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [JPUSHService setBadge:0];
+    
+    [[UIApplication sharedApplication]setApplicationIconBadgeNumber:0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+//注册device_token
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    
+    [JPUSHService registerDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    
+    [JPUSHService handleRemoteNotification:userInfo];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
+    
+    [JPUSHService handleRemoteNotification:userInfo];
+    completionHandler(UIBackgroundFetchResultNewData);
 }
 
 @end
